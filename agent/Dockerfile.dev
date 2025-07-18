@@ -1,0 +1,22 @@
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+RUN pip install uv
+
+COPY pyproject.toml ./
+# Copy lockfile if exists, otherwise uv will resolve
+COPY uv.loc[k] ./
+RUN uv sync || uv install
+
+COPY . .
+
+EXPOSE 2024
+
+# Use langgraph dev for development with hot reloading
+CMD ["uv", "run", "langgraph", "dev", "--host", "0.0.0.0", "--port", "2024"]

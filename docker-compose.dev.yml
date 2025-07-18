@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  agent:
+    build:
+      context: ./agent
+      dockerfile: Dockerfile.dev
+    ports:
+      - "2024:2024"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LANGSMITH_API_KEY=${LANGSMITH_API_KEY}
+      - TAVILY_API_KEY=${TAVILY_API_KEY}
+    volumes:
+      - ./agent:/app
+    
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - LANGGRAPH_SERVER_URL=http://agent:2024
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - agent
+    command: uv run uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    
+  web:
+    build: ./web
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_BACKEND_URL=http://localhost:8000
+    volumes:
+      - ./web:/app
+      - web_node_modules:/app/node_modules
+    depends_on:
+      - backend
+    command: npm run dev -- --host 0.0.0.0
+
+volumes:
+  web_node_modules:

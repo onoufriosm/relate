@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.git/
+.env*
+*.log
+.DS_Store
+.vscode/
+.idea/
+*.md
+.langgraph_api/
+*.pckl
+eval/results/

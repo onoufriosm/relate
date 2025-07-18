@@ -1,0 +1,15 @@
+.git
+.gitignore
+*.md
+.vscode/
+.idea/
+.env*
+*.log
+node_modules/
+__pycache__/
+*.py[cod]
+build/
+dist/
+.DS_Store
+test/
+tests/

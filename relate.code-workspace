@@ -1,0 +1,40 @@
+{
+    "folders": [
+        {
+            "name": "backend",
+            "path": "./backend",
+            "settings": {
+                "python.defaultInterpreterPath": "./.venv/bin/python",
+                "python.pythonPath": "./.venv/bin/python"
+            }
+        },
+        {
+            "name": "agent", 
+            "path": "./agent",
+            "settings": {
+                "python.defaultInterpreterPath": "./.venv/bin/python",
+                "python.pythonPath": "./.venv/bin/python"
+            }
+        },
+        {
+            "name": "web",
+            "path": "./web"
+        }
+    ],
+    "settings": {
+        "python.terminal.activateEnvironment": true,
+        "python.analysis.autoImportCompletions": true,
+        "python.analysis.typeCheckingMode": "basic",
+        "[python]": {
+            "editor.defaultFormatter": "charliermarsh.ruff"
+        },
+        "python.defaultInterpreterPath": "./backend/.venv/bin/python",
+        "python.pythonPath": "./backend/.venv/bin/python"
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-python.python",
+            "charliermarsh.ruff"
+        ]
+    }
+}
