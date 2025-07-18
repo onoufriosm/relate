@@ -1,0 +1,2 @@
+- Ask me before commit and pushing to git
+- Commit messages should be as brief as possible
