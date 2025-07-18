@@ -1,8 +1,9 @@
 # Relate: AI-Powered Research Assistant
 
-![Agent Workflow](Screenshot%202025-07-14%20at%2016.17.04.png)
-
 Relate is an intelligent research assistant that combines large language models with web search capabilities to help users explore complex topics. Unlike traditional chatbots, Relate features a sophisticated AI agent that breaks down research questions, searches the web strategically, and learns from user feedback.
+
+## LangGraph graph
+<img src="Screenshot%202025-07-14%20at%2016.17.04.png" alt="Agent Workflow" width="600">
 
 ## Core Features
 
