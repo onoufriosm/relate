@@ -1,191 +1,107 @@
-# Relate Project
+# Relate: AI-Powered Research Assistant
 
-AI-powered research and conversation platform with LangGraph agent, FastAPI backend, and React frontend.
+![Agent Workflow](Screenshot%202025-07-14%20at%2016.17.04.png)
 
-## Quick Start
+Relate is an intelligent research assistant that combines large language models with web search capabilities to help users explore complex topics. Unlike traditional chatbots, Relate features a sophisticated AI agent that breaks down research questions, searches the web strategically, and learns from user feedback.
+
+## Core Features
+
+**🧠 Smart Agent Workflow**: LangGraph-powered agent with structured reasoning that classifies queries, plans research strategies, pauses for human approval, and executes targeted web searches.
+
+**🤝 Human-in-the-Loop**: Before searching, the agent presents its plan for user approval, feedback, or modifications - ensuring research stays focused and relevant.
+
+**🧭 Memory & Learning**: Episodic memory system learns user preferences and patterns over time, becoming smarter about when to search and what queries to suggest.
+
+**⚡ Real-time Streaming**: Live updates as research progresses with server-sent events for responsive user experience.
+
+**🔍 Advanced Search**: Tavily web search integration with intelligent result synthesis and source attribution.
+
+**📊 Observability**: LangSmith integration for complete workflow tracing, evaluation, and performance monitoring.
+
+## Technology Stack
+
+- **Frontend**: React + TypeScript + Tailwind CSS
+- **Backend**: FastAPI with streaming support  
+- **Agent**: LangGraph + OpenAI GPT-4 + Tavily Search
+- **Infrastructure**: Docker containerization
+
+## Development Setup
 
 ### Prerequisites
 - Docker Desktop
 - API keys: OpenAI, LangSmith, Tavily
 
-### Setup
+### Quick Start
 
 ```bash
-# 1. Clone repository
+# 1. Clone and navigate
 git clone <repository-url>
 cd relate
 
-# 2. Run setup script
-./setup-docker.sh setup
-
-# 3. Configure API keys in agent/.env
+# 2. Configure API keys in agent/.env
 OPENAI_API_KEY=sk-proj-your_key_here
 LANGSMITH_API_KEY=lsv2_pt_your_key_here
 TAVILY_API_KEY=tvly-dev_your_key_here
 
-# 4. Start services
-docker-compose up -d
+# 3. Start all services
+docker-compose -f docker-compose.dev.yml up -d
 ```
 
-### Access URLs
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:8000
-- **Agent API**: http://localhost:2024
-- **API Docs**: http://localhost:8000/docs
+**Access URLs:**
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:8000  
+- Agent API: http://localhost:2024
+- API Docs: http://localhost:8000/docs
 
-## Services
+## Development Commands
 
-- **agent**: LangGraph AI agent (port 2024)
-- **backend**: FastAPI backend (port 8000)
-- **web**: React frontend (port 5173)
-
-## Development
-
-### Commands
 ```bash
-# Start development
-./setup-docker.sh start
-
 # View logs
-docker-compose logs -f
+docker-compose -f docker-compose.dev.yml logs -f
 
-# Restart services
-./setup-docker.sh restart
+# Restart services  
+docker-compose -f docker-compose.dev.yml restart
 
 # Stop services
-./setup-docker.sh stop
+docker-compose -f docker-compose.dev.yml down
 
-# Clean up
-./setup-docker.sh cleanup
+# Rebuild services
+docker-compose -f docker-compose.dev.yml build
 ```
 
-### Hot Reload
-- **Web**: Vite HMR
-- **Backend**: FastAPI auto-reload
-- **Agent**: LangGraph development mode
+**Hot Reload**: All services support live reloading during development.
 
-## Production Deployment
+## Environment Configuration
 
-### Docker Compose
-```bash
-# Build and deploy
-docker-compose -f docker-compose.prod.yml build
-docker-compose -f docker-compose.prod.yml up -d
-```
-
-### Platform-Specific
-- **Vercel**: Frontend only
-- **Render**: Full stack
-- **AWS ECS**: Container orchestration
-- **Google Cloud Run**: Serverless containers
-
-See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
-
-## Environment Variables
-
-### Required
+**Required API Keys** (add to `agent/.env`):
 ```env
-# agent/.env
 OPENAI_API_KEY=sk-proj-your_key_here
 LANGSMITH_API_KEY=lsv2_pt_your_key_here
 TAVILY_API_KEY=tvly-dev_your_key_here
+```
 
+**Optional** (backend/web have sensible defaults):
+```env
 # backend/.env
 PORT=8000
 
-# web/.env
+# web/.env  
 VITE_BACKEND_URL=http://localhost:8000
 ```
 
-See [ENV_GUIDE.md](ENV_GUIDE.md) for complete configuration.
+## Troubleshooting
 
-## Common Issues
+**Port conflicts**: `lsof -i :5173` and `kill -9 $(lsof -t -i:5173)`
 
-### Port conflicts
-```bash
-# Find and kill process
-lsof -i :5173
-kill -9 $(lsof -t -i:5173)
-```
+**Missing API keys**: Check `agent/.env` exists and has valid keys
 
-### Environment variables
-```bash
-# Check files exist
-ls -la .env*
-cat agent/.env | grep OPENAI_API_KEY
-```
-
-### Services not starting
-```bash
-# Check logs
-docker-compose logs -f
-```
-
-See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for more solutions.
-
-## API Documentation
-
-### Backend Endpoints
-- `GET /health` - Health check
-- `POST /api/chat` - Chat conversation
-- `GET /api/threads` - List threads
-- `POST /api/threads` - Create thread
-
-### Agent Endpoints
-- `GET /health` - Health check
-- `POST /runs` - Execute workflow
-- `GET /runs/{run_id}` - Get status
-- `POST /runs/{run_id}/stream` - Stream results
-
-## Features
-
-### AI Agent
-- LangGraph workflow orchestration
-- OpenAI integration
-- Tavily search
-- LangSmith tracing
-
-### Backend
-- FastAPI with OpenAPI docs
-- RESTful endpoints
-- Real-time streaming
-- Thread management
-
-### Frontend
-- React Router v7
-- TypeScript
-- Tailwind CSS
-- Real-time chat interface
-
-## Documentation
-
-- **[DOCKER.md](DOCKER.md)**: Docker setup
-- **[ENV_GUIDE.md](ENV_GUIDE.md)**: Environment configuration
-- **[DEPLOYMENT.md](DEPLOYMENT.md)**: Production deployment
-- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)**: Common issues
-
-## Security
-
-- Never commit API keys
-- Use environment variables
-- Rotate keys regularly
-- Use HTTPS in production
-- Implement CORS properly
+**Services not starting**: Run `docker-compose -f docker-compose.dev.yml logs -f`
 
 ## Contributing
 
 1. Fork repository
-2. Create feature branch
-3. Add tests
+2. Create feature branch  
+3. Test your changes
 4. Submit pull request
-
-Follow TypeScript/Python standards and ensure all services pass health checks.
-
-## Support
-
-1. Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
-2. Review logs: `docker-compose logs -f`
-3. Verify environment configuration
-4. Check API key validity
 
 **Note**: Requires Docker and valid API keys for OpenAI, LangSmith, and Tavily.
