@@ -12,9 +12,12 @@ RUN pip install uv
 COPY pyproject.toml ./
 # Copy lockfile if exists, otherwise uv will resolve
 COPY uv.loc[k] ./
-RUN uv sync || uv install
 
+# Copy source code before installing to avoid build errors
 COPY . .
+
+# Install dependencies after copying source
+RUN uv sync
 
 EXPOSE 2024
 

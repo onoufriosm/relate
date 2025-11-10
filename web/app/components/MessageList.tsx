@@ -24,6 +24,7 @@ export function MessageList({
   plannedQueries,
   messagesEndRef
 }: MessageListProps) {
+  console.log('messages1', messages);
     // Helper function to attach search results to assistant messages
     const attachSearchResults = (message: ChatMessageType, index: number): ChatMessageType => {
       if (message.type !== 'assistant') return message;

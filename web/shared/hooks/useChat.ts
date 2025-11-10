@@ -52,6 +52,7 @@ export function useChat(): UseChatReturn {
   const currentPlannedQueriesRef = useRef<string[]>([]);
   const currentMessageIdRef = useRef<string>('');
   const currentResponseRef = useRef<string>('');
+  const streamedContentLengthRef = useRef<number>(0);
 
   // Callback to load restored messages into chat state
   const handleMessagesLoaded = useCallback((restoredMessages: ChatMessage[]) => {
@@ -132,6 +133,7 @@ export function useChat(): UseChatReturn {
       
       // Create assistant message with loading state
       currentResponseRef.current = '';
+      streamedContentLengthRef.current = 0;
       const assistantMessageId = addMessage({
         type: 'assistant',
         content: '',
@@ -158,6 +160,7 @@ export function useChat(): UseChatReturn {
       // Create assistant message if it doesn't exist (for direct answers)
       if (!currentMessageIdRef.current) {
         currentResponseRef.current = '';
+        streamedContentLengthRef.current = 0;
         const assistantMessageId = addMessage({
           type: 'assistant',
           content: '',
@@ -166,10 +169,31 @@ export function useChat(): UseChatReturn {
         currentMessageIdRef.current = assistantMessageId;
       }
       
-      // Add answer tokens to content
-      currentResponseRef.current += content;
-      
-      // Update typing animation with new content
+      const incomingContent = typeof content === 'string' ? content : String(content ?? '');
+      if (incomingContent.length === 0) {
+        return;
+      }
+
+      const existingContent = currentResponseRef.current;
+      const existingLength = streamedContentLengthRef.current;
+      const looksLikeCumulativeUpdate =
+        existingLength > 0
+          ? incomingContent.length >= existingLength &&
+            incomingContent.startsWith(existingContent.slice(0, existingLength))
+          : incomingContent.length >= existingLength;
+
+      if (looksLikeCumulativeUpdate) {
+        if (incomingContent.length === existingLength) {
+          return;
+        }
+        currentResponseRef.current = incomingContent;
+        streamedContentLengthRef.current = incomingContent.length;
+        typingAnimation.updateStreamContent(currentResponseRef.current);
+        return;
+      }
+
+      currentResponseRef.current = existingContent + incomingContent;
+      streamedContentLengthRef.current = currentResponseRef.current.length;
       typingAnimation.updateStreamContent(currentResponseRef.current);
     },
     onSearchResults: (content) => {
@@ -307,6 +331,7 @@ export function useChat(): UseChatReturn {
 
     currentMessageIdRef.current = '';
     currentResponseRef.current = '';
+    streamedContentLengthRef.current = 0;
     
     // Stop any existing typing animation
     typingAnimation.stopTyping();
